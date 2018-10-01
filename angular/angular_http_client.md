@@ -165,13 +165,13 @@ export class Service {
 }
 ```
 
-* With the older http module, one could invoke:
+* With the older http module, one could invoke as follows in order to return a json object once we subscribe!
 
 ```typescript
     this.http.get().map(response => return response.json();)
 ```
 
-In order to return a json object once we subscribe
+
 
 2. In a component which relies on this service, we create a method that will be BOUND to an event such as a click:
 

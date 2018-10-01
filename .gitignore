@@ -1,0 +1,5 @@
+# ignores .cson files by BOOSTNOTE
+notes/
+
+# ignores boostnote config json
+boostnote.json

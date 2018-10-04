@@ -138,3 +138,134 @@ export class Component implements OnInit {
     }
 }
 ```
+
+## Passing parameters to the routes (dynamic routing)
+
+### Add the :parameter (router parameter)
+
+Adding a colon and name creates a route parameter which can be accessed
+by the component class.
+
+```typescript
+import { Routes } from "@angular/router";
+
+const appRoutes: Routes = [
+    // controller can retrieve the id parameter
+    { path: 'users/:id', component: UserComponent},  // dynamic path
+];
+```
+
+### Accessing the parameter in a component class
+
+We can access the route parameter with ActivatedRouter object on the ngOnInit method (initialization of the component).
+
+* We can access it by using the activatedRoute.snapshot.params;
+* The template html can access it by refering the component's variables.
+
+
+This is a nice approach to get the route params for the FIRST TIME the component is loaded!
+
+```typescript
+import { ActivatedRoute } from "@angular/router";
+
+@Component({
+    ...
+})
+export class Component implements OnInit {
+
+    // component property that will receive the route parameter
+    id : number;
+
+    // inject the activated route to access the parameter
+    constructor(private activatedRoute: ActivatedRoute) {}
+
+    onMethod() {
+        // redirects to the path RELATIVE to the actual route
+        this.router.navigate(['relativePath'], {relativeTo: this.activatedRoute});
+    }
+
+    ngOnInit() {
+        // retrives the id router parameter from the activatedRoute
+        // excellent for the FIRST LOAD
+        this.id = this.activatedRoute.snapshot.params["id"];
+    }
+}
+```
+
+* When we are on a component's page, angular does NOT instantiate it again, only if we navigate to another component and get back to it!
+
+* Hence, by default, angular does not recreate a component! However, if the component's data change, we may want to reload!
+
+
+### Listening to route parameters changes in a already loaded component
+
+If the component was ALREADY loaded if the snapshot params, it will not reload again with new data if the route changes!
+
+Observable data is excellent for handling async tasks! Listening to route changes is one!
+
+Hence, we subscribe to the observable in order to eventually execute a callback when the async code is finished! We use this callback to UPDATE the component with the new route data"
+
+Syntax:
+
+```typescript 
+    .subscribe(
+        // first callback takes the Params object
+        (params: Params) => {
+
+        },
+    );
+```
+
+This is essential when we are in the same component and want to update its data but Angular will not reload the ALREADY RELOADED component:
+
+```typescript 
+    ngOnInit() {
+        // this updates the component as it is LOADED
+        this.id = this.activatedRoute.snapshot.params["id"];      
+
+        // this updates the component as the ROUTE CHANGES AFTER LOAD
+        this.activatedRoute.params
+            .subscribe(
+                (params: Params) => {
+                    this.id = params["id"];  // update component as route changes                
+                }
+            );  
+    }
+    
+```
+
+## <!> Important note <!> about subscriptions
+
+When one subscribes to an observable, this subscription LIVES ON MEMORY even if the component is destroyed (Unless its an Angular-based observable);
+
+Te safest way is to unsubscribe to custom observables is on OnDestroy!
+
+```typescript 
+    import { Subscription } from "rxjs/Subscription';
+
+    ...
+
+    subscription: Subscription;
+
+    ...
+
+    ngOnInit() {
+        // this updates the component as it is LOADED
+        this.id = this.activatedRoute.snapshot.params["id"];      
+
+        // this updates the component as the ROUTE CHANGES AFTER LOAD
+        this.subscription = this.something.subscribe(...);
+    }
+
+    ngOnDestroy() {
+        // safely removes the subscription after component is detroyed!
+        this.subscription.unsubscribe;
+    }    
+```
+
+For angular-based subscriptions, unsubscribing is DONE AUTOMATICALLY by the framework and, therefore, not necessary! 
+
+However, for CUSTOM subscription --> removing is ESSENTIAL to avoid unnecessary memory consumption!
+
+## Query parameters
+

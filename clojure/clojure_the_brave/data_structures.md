@@ -106,3 +106,72 @@ Also, maps can also be treated AS functions to get values from the keys!
 ```
 
 ### Keywords
+
+They are like LISP symbols. Commonly used in maps as keywords.
+
+* They can also be treated AS functions to look up values in a map which
+is sorta like the opposite way of getting values from maps when those
+are used as a function.
+
+* Using keywords AS functions is a thing among real clojurists!!
+
+```
+(:a {:a 1 :b 2} "default value")
+;=> 1
+
+({:a 1 :b 2} :a "default value")
+;=> 1
+```
+
+### Vectors
+
+Vectors are similar to arrays! They are 0-indexed collections!
+
+```
+[3 2 1]
+```
+
+Once again, we can use get ```get``` function to get values
+from these collections but now using INDEXES rather than keys.
+
+```
+(get [1 2 3] 0)
+
+;=> 3
+```
+Indexes that are bigger than the array's size returns ```nil```.
+
+Arrays can hold different types of data.
+
+```
+(get ["a" {:first "igor" :last "gp"} 2] 1)
+
+;=> {:first "igor" :last "gp"}
+```
+```vector``` function can be used to create vectors
+
+```
+(vector "hi" 1 2)
+```
+* Vectors are dynamic structures! Use the ```conj``` function
+to append elements to the end of the array
+
+```
+(conj [1 2 3] 4)
+```
+
+### Lists 
+
+Lists, like vectors, are LINEAR collection of values. 
+
+```
+`(1 2 3 4)
+
+;=> (1 2 3 4)  ;; no single quote, we'll learn later why
+```
+
+To get values from this data structure:
+
+```
+
+```

@@ -162,7 +162,10 @@ to append elements to the end of the array
 
 ### Lists 
 
-Lists, like vectors, are LINEAR collection of values. 
+Lists, like vectors, are LINEAR collection of values. However,
+lists ares, in fact, ```linked lists``` whereas arrays are, well, ```arrays```.
+
+Literal notation:
 
 ```
 `(1 2 3 4)
@@ -170,8 +173,80 @@ Lists, like vectors, are LINEAR collection of values.
 ;=> (1 2 3 4)  ;; no single quote, we'll learn later why
 ```
 
-To get values from this data structure:
+To get values from this data structure, we use ```nth``` function.
 
 ```
+(nth '(:a :b :c) 0)
+;=> :a
+```
+
+Differently from get, nth raises an exception if the index is out of bounds.
+
+* To access an element,```nth``` takes O(n) to retrieve an element from
+a linked list (requires traversing);
+
+* To access an element, ```get``` takes O(1) to retrieve an element from
+an array by its index (arrays are linear collections of memory addresses).
+
+* To add an element to the beginning of the collection, lists take O(1) which
+is good for LIFO structures such as stacks.
+
+* To add an element to the beginning of an array, it takes O(n) operation.
+
+### Sets
+
+Clojure has two kinds of sets (collection of UNIQUE values):
+
+* hash sets;
+* sorted sets
+
+Hash sets are the most common ones. Literal notation:
 
 ```
+#{"hi" 20 :b}
+```
+
+Using ```hash-set``` function:
+
+```
+(hash-set 1 1 2 2 )
+```
+
+To add values to the hash set (adding values that are non-unique doesnt change anything)
+
+```
+(conj #{1 2} 3)
+
+;=> #{1 3 2}
+```
+
+Sets, like in Python, can be created from vectors:
+
+```
+(set [3 3 4 4])
+;=> [4 3]
+```
+
+Membership can be check with the Ruby-like function: ```contains?```:
+
+```
+(contains? #{:a :b} :a) ;; returns true or false
+
+(get #{:a :b} :a) ;; returns the value or nil
+
+(:a #{:a :b})  ;; keyword as function --> returns value or nil
+```
+
+### Simplicity
+
+Clojure emphasis SIMPLICITY. Usually, the creation of new types
+of classes is NOT necessary for the builtin data structures is 
+usually enough! Data does not need to be tightly bundled with a class
+to be useful!
+
+"""
+It's better to have 100 functions operate on ONE data structure
+than 10 functions on 10 data structures
+
+                                                -- Alan Perlis
+"""
